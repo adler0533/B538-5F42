@@ -14,20 +14,34 @@
 
 ## 🚀 פריסה מהירה
 
-### אוטומטי (מומלץ)
+### ⚡ הפתרון הכי פשוט
 
-```bash
-./git-deploy.sh
-```
+1. **העלה הכל ל-GitHub**:
 
-### ידני
+   ```bash
+   git add .
+   git commit -m "Ready for deployment"
+   git push origin main
+   ```
 
-1. העלה ל-GitHub
-2. פרוס Backend ל-[Railway](https://railway.app)
-3. פרוס Frontend ל-[Vercel](https://vercel.com)
-4. הגדר Environment Variables
+2. **פרוס Backend ל-[Render](https://render.com)**:
 
-📖 **לפרטים מלאים**: ראה `QUICK_DEPLOY.md`
+   - New Web Service → בחר רפוזיטורי
+   - Root Directory: `backend`
+   - Build Command: `npm install`
+   - Start Command: `npm start`
+
+3. **פרוס Frontend ל-[Netlify](https://netlify.com)**:
+
+   - New site from Git → בחר רפוזיטורי
+   - Base directory: `frontend`
+   - Build command: `npm run build`
+   - Publish directory: `build`
+
+4. **הגדר Environment Variables**:
+   - ב-Netlify: `REACT_APP_API_URL` = `https://your-backend.onrender.com/api`
+
+📖 **לפרטים מלאים**: ראה `SIMPLE_DEPLOY.md`
 
 ## 🛠️ פיתוח מקומי
 
