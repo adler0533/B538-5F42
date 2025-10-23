@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Initialize SQLite database
 const dbPath = process.env.NODE_ENV === 'production' 
-  ? '/tmp/phonebook.db' 
+  ? '/opt/render/project/src/phonebook.db' 
   : path.join(__dirname, 'phonebook.db');
 
 const db = new sqlite3.Database(dbPath, (err) => {
@@ -25,6 +25,7 @@ const db = new sqlite3.Database(dbPath, (err) => {
     console.error('Error opening database:', err.message);
   } else {
     console.log('Connected to SQLite database');
+    console.log('Database path:', dbPath);
     initDatabase();
   }
 });
