@@ -4,7 +4,9 @@ services:
     env: node
     plan: free
     buildCommand: npm install
-    startCommand: npm start
+    startCommand: node server-mongodb.js
     envVars:
       - key: NODE_ENV
         value: production
+      - key: MONGODB_URI
+        value: mongodb+srv://adler0533_db_user:<db_password>@cluster0.odnm3ka.mongodb.net/?appName=Cluster0
