@@ -97,6 +97,16 @@ app.get('/api/contacts/:id', (req, res) => {
   });
 });
 
+// Format phone number with dash
+const formatPhoneNumber = (phone) => {
+  const cleanPhone = phone.replace(/\D/g, '');
+  if (cleanPhone.length <= 3) {
+    return cleanPhone;
+  } else {
+    return cleanPhone.slice(0, 3) + '-' + cleanPhone.slice(3);
+  }
+};
+
 // Israeli phone number validation function
 const validateIsraeliPhone = (phone) => {
   // Remove all non-digit characters
@@ -132,9 +142,11 @@ app.post('/api/contacts', (req, res) => {
     return;
   }
 
+  const formattedPhone = formatPhoneNumber(phone);
+  
   db.run(
     'INSERT INTO contacts (firstName, lastName, phone, isFavorite) VALUES (?, ?, ?, ?)',
-    [firstName, lastName, phone, isFavorite ? 1 : 0],
+    [firstName, lastName, formattedPhone, isFavorite ? 1 : 0],
     function(err) {
       if (err) {
         res.status(500).json({ error: err.message });
@@ -145,7 +157,7 @@ app.post('/api/contacts', (req, res) => {
         id: this.lastID,
         firstName,
         lastName,
-        phone,
+        phone: formattedPhone,
         isFavorite: Boolean(isFavorite)
       });
     }
@@ -169,9 +181,11 @@ app.put('/api/contacts/:id', (req, res) => {
     return;
   }
 
+  const formattedPhone = formatPhoneNumber(phone);
+  
   db.run(
     'UPDATE contacts SET firstName = ?, lastName = ?, phone = ?, isFavorite = ?, updatedAt = CURRENT_TIMESTAMP WHERE id = ?',
-    [firstName, lastName, phone, isFavorite ? 1 : 0, id],
+    [firstName, lastName, formattedPhone, isFavorite ? 1 : 0, id],
     function(err) {
       if (err) {
         res.status(500).json({ error: err.message });
@@ -187,7 +201,7 @@ app.put('/api/contacts/:id', (req, res) => {
         id: parseInt(id),
         firstName,
         lastName,
-        phone,
+        phone: formattedPhone,
         isFavorite: Boolean(isFavorite)
       });
     }

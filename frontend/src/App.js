@@ -42,9 +42,26 @@ function App() {
     }
   };
 
+  const formatPhoneNumber = (phone) => {
+    // Remove all non-digit characters
+    const cleanPhone = phone.replace(/\D/g, '');
+    
+    // Format based on length
+    if (cleanPhone.length <= 3) {
+      return cleanPhone;
+    } else if (cleanPhone.length <= 6) {
+      return cleanPhone.slice(0, 3) + '-' + cleanPhone.slice(3);
+    } else if (cleanPhone.length <= 9) {
+      return cleanPhone.slice(0, 3) + '-' + cleanPhone.slice(3);
+    } else {
+      return cleanPhone.slice(0, 3) + '-' + cleanPhone.slice(3);
+    }
+  };
+
   const handlePhoneChange = (e) => {
     const phone = e.target.value;
-    setFormData({...formData, phone});
+    const formattedPhone = formatPhoneNumber(phone);
+    setFormData({...formData, phone: formattedPhone});
     
     // Clear error when user starts typing
     if (phoneError) {
@@ -52,8 +69,8 @@ function App() {
     }
     
     // Validate phone number
-    if (phone.trim()) {
-      const validation = validateIsraeliPhone(phone);
+    if (formattedPhone.trim()) {
+      const validation = validateIsraeliPhone(formattedPhone);
       if (!validation.isValid) {
         setPhoneError('מספר טלפון לא תקין. אנא הכנס מספר ישראלי תקין (למשל: 050-1234567)');
       }
