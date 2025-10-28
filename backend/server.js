@@ -43,28 +43,8 @@ function initDatabase() {
       updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
     )`);
 
-    // Insert sample data if table is empty
-    db.get("SELECT COUNT(*) as count FROM contacts", (err, row) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-      
-      if (row.count === 0) {
-        const sampleContacts = [
-          ['דוד', 'כהן', '050-1234567', 1],
-          ['רחל', 'לוי', '052-9876543', 0],
-          ['משה', 'ישראלי', '054-5555555', 0]
-        ];
-        
-        const stmt = db.prepare("INSERT INTO contacts (firstName, lastName, phone, isFavorite) VALUES (?, ?, ?, ?)");
-        sampleContacts.forEach(contact => {
-          stmt.run(contact);
-        });
-        stmt.finalize();
-        console.log('Sample contacts inserted');
-      }
-    });
+    // Start with empty database - no sample data
+    console.log('Database initialized with empty table');
   });
 }
 
