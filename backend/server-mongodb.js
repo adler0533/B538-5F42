@@ -7,7 +7,7 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // MongoDB connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://adler0533_db_user:wq33331@cluster0.odnm3ka.mongodb.net/?appName=Cluster0';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://adler0533_db_user:wq33331@cluster0.odnm3ka.mongodb.net/?appName=Cluster0&retryWrites=true&w=majority';
 const DB_NAME = 'phonebook';
 const COLLECTION_NAME = 'contacts';
 
