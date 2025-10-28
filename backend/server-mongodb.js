@@ -16,22 +16,48 @@ let contactsCollection;
 
 // Connect to MongoDB
 async function connectToMongoDB() {
-  try {
-    const client = new MongoClient(MONGODB_URI);
-    await client.connect();
-    console.log('Connected to MongoDB Atlas');
-    
-    db = client.db(DB_NAME);
-    contactsCollection = db.collection(COLLECTION_NAME);
-    
-    // Create index for better performance
-    await contactsCollection.createIndex({ firstName: 1, lastName: 1 });
-    await contactsCollection.createIndex({ phone: 1 });
-    
-    console.log('MongoDB setup complete');
-  } catch (error) {
-    console.error('MongoDB connection error:', error);
-    process.exit(1);
+  let retries = 3;
+  let client;
+  
+  while (retries > 0) {
+    try {
+      client = new MongoClient(MONGODB_URI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        ssl: true,
+        sslValidate: false,
+        tlsAllowInvalidCertificates: true,
+        tlsAllowInvalidHostnames: true,
+        serverSelectionTimeoutMS: 5000,
+        connectTimeoutMS: 10000,
+        socketTimeoutMS: 45000
+      });
+      
+      await client.connect();
+      console.log('Connected to MongoDB Atlas');
+      
+      db = client.db(DB_NAME);
+      contactsCollection = db.collection(COLLECTION_NAME);
+      
+      // Create index for better performance
+      await contactsCollection.createIndex({ firstName: 1, lastName: 1 });
+      await contactsCollection.createIndex({ phone: 1 });
+      
+      console.log('MongoDB setup complete');
+      return; // Success, exit the function
+      
+    } catch (error) {
+      console.error(`MongoDB connection error (${retries} retries left):`, error.message);
+      retries--;
+      
+      if (retries === 0) {
+        console.error('Failed to connect to MongoDB after 3 attempts');
+        process.exit(1);
+      }
+      
+      // Wait before retry
+      await new Promise(resolve => setTimeout(resolve, 2000));
+    }
   }
 }
 
